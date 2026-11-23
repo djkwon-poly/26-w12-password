@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PasswordDiagnosis from './components/PasswordDiagnosis';
 import PasswordGenerator from './components/PasswordGenerator';
 import CryptoVault from './components/CryptoVault';
@@ -8,6 +8,17 @@ import './App.css';
 function App() {
   const [activeTab, setActiveTab] = useState('diagnosis');
   const [currentPassword, setCurrentPassword] = useState('password');
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('shieldpass_theme') || 'dark';
+  });
+
+  useEffect(() => {
+    localStorage.setItem('shieldpass_theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+  };
 
   const handleApplyGeneratedPassword = (newPassword) => {
     setCurrentPassword(newPassword);
@@ -15,7 +26,7 @@ function App() {
   };
 
   return (
-    <div className="app-root">
+    <div className={`app-root ${theme === 'light' ? 'light-mode' : 'dark-mode'}`} data-theme={theme}>
       {/* 상단 사이버보안 헤더 */}
       <header className="app-header">
         <div className="header-inner">
@@ -28,10 +39,20 @@ function App() {
               </p>
             </div>
           </div>
-          <div className="header-badges">
-            <span className="badge badge-sec">최소 전송 원칙 준수</span>
-            <span className="badge badge-tech">Web Crypto API</span>
-            <span className="badge badge-env">Client-Side Only</span>
+          <div className="header-actions">
+            <div className="header-badges">
+              <span className="badge badge-sec">최소 전송 원칙 준수</span>
+              <span className="badge badge-tech">Web Crypto API</span>
+              <span className="badge badge-env">Client-Side Only</span>
+            </div>
+            <button
+              type="button"
+              className="theme-toggle-btn"
+              onClick={toggleTheme}
+              aria-label="화면 모드 전환"
+            >
+              {theme === 'dark' ? '☀️ 라이트' : '🌙 다크'}
+            </button>
           </div>
         </div>
       </header>
