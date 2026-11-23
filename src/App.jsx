@@ -1,122 +1,113 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import PasswordDiagnosis from './components/PasswordDiagnosis';
+import PasswordGenerator from './components/PasswordGenerator';
+import CryptoVault from './components/CryptoVault';
+import SecurityGuide from './components/SecurityGuide';
+import './App.css';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [activeTab, setActiveTab] = useState('diagnosis');
+  const [currentPassword, setCurrentPassword] = useState('password');
+
+  const handleApplyGeneratedPassword = (newPassword) => {
+    setCurrentPassword(newPassword);
+    setActiveTab('diagnosis');
+  };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+    <div className="app-root">
+      {/* 상단 사이버보안 헤더 */}
+      <header className="app-header">
+        <div className="header-inner">
+          <div className="brand-box">
+            <div className="shield-logo">🛡️</div>
+            <div>
+              <h1 className="brand-title">ShieldPass 보안 도구</h1>
+              <p className="brand-subtitle">
+                Web Crypto API 기반 실시간 강도 분석 · k-익명성 유출 확인 · 영지식 금고
+              </p>
+            </div>
+          </div>
+          <div className="header-badges">
+            <span className="badge badge-sec">최소 전송 원칙 준수</span>
+            <span className="badge badge-tech">Web Crypto API</span>
+            <span className="badge badge-env">Client-Side Only</span>
+          </div>
         </div>
-        <div>
-          <h1>Get started</h1>
+      </header>
+
+      {/* 네비게이션 탭 */}
+      <nav className="tab-nav">
+        <div className="tab-container">
+          <button
+            type="button"
+            className={`tab-btn ${activeTab === 'diagnosis' ? 'active' : ''}`}
+            onClick={() => setActiveTab('diagnosis')}
+          >
+            <span className="tab-icon">🛡️</span>
+            <span>강도 진단 & 유출 확인</span>
+          </button>
+          <button
+            type="button"
+            className={`tab-btn ${activeTab === 'generator' ? 'active' : ''}`}
+            onClick={() => setActiveTab('generator')}
+          >
+            <span className="tab-icon">🔑</span>
+            <span>안전한 생성기</span>
+          </button>
+          <button
+            type="button"
+            className={`tab-btn ${activeTab === 'vault' ? 'active' : ''}`}
+            onClick={() => setActiveTab('vault')}
+          >
+            <span className="tab-icon">🔒</span>
+            <span>AES-GCM 암호화 금고</span>
+            <span className="tab-badge">확장</span>
+          </button>
+          <button
+            type="button"
+            className={`tab-btn ${activeTab === 'guide' ? 'active' : ''}`}
+            onClick={() => setActiveTab('guide')}
+          >
+            <span className="tab-icon">📚</span>
+            <span>k-익명성 원리 가이드</span>
+          </button>
+        </div>
+      </nav>
+
+      {/* 메인 탭 컨텐츠 */}
+      <main className="main-content">
+        {activeTab === 'diagnosis' && (
+          <PasswordDiagnosis
+            password={currentPassword}
+            setPassword={setCurrentPassword}
+            onSwitchToGenerator={() => setActiveTab('generator')}
+          />
+        )}
+
+        {activeTab === 'generator' && (
+          <PasswordGenerator onApplyToDiagnosis={handleApplyGeneratedPassword} />
+        )}
+
+        {activeTab === 'vault' && <CryptoVault />}
+
+        {activeTab === 'guide' && <SecurityGuide />}
+      </main>
+
+      {/* 하단 푸터 */}
+      <footer className="app-footer">
+        <div className="footer-inner">
           <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
+            <strong>26-w12-password</strong> | 한국폴리텍대학 서울강서캠퍼스 사이버보안과
+          </p>
+          <p className="footer-note">
+            🛡️ 보안 원칙: 입력된 모든 비밀번호는 브라우저 내부 메모리에서만 처리되며, 
+            외부 서버로는 k-익명성 접두사(앞 5자리) 외에 어떤 정보도 전송하거나 로컬에 저장하지 않습니다.
           </p>
         </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      </footer>
+    </div>
+  );
 }
 
-export default App
+export default App;
